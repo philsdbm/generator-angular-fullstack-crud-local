@@ -13,7 +13,7 @@ $ npm install -g yo
 
 ## Angular Fullstack CRUD - local version
 
-To install generator-angular-fullstack-crud from npm, go to project directory and run:
+To install generator-angular-fullstack-crud-local from npm, go to project directory and run:
 
 ```bash
 $ npm link
@@ -69,7 +69,7 @@ using "member": "MongooseReferenceCmbName:Member" will appear as 'Smith, John Do
             "model": {
                 "first_name": "String",
                 "middle_name": "String",
-                "last_name": "String
+                "last_name": "String"
             }
         },
         {
