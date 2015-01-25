@@ -11,12 +11,12 @@
 $ npm install -g yo
 ```
 
-## Angular Fullstack CRUD
+## Angular Fullstack CRUD - local version
 
-To install generator-angular-fullstack-crud from npm, run:
+To install generator-angular-fullstack-crud from npm, go to project directory and run:
 
 ```bash
-$ npm install -g generator-angular-fullstack-crud
+$ npm link
 ```
 
 Next, ensure you have a (mostly?) blank version of an angular-fullstack site.  For best results, execute the generator against a completely fresh/new angular-fullstack site.
@@ -28,6 +28,10 @@ $ yo angular-fullstack
 ```
 
 Next, create a config.json file to drive the crud generation.  The angular-fullstack-crud generator comes with an example file, config.json.  The only update required within this example is to correctly set the 'appName' property to whateve your angular-fullstack application is named.  Here is an example of what this config might look like:
+
+
+adding ';hidden' at the end of value hides it from the list view
+using "member": "MongooseReferenceCmbName:Member" will appear as 'Smith, John Doe'
 
 ```json
 {
@@ -42,7 +46,7 @@ Next, create a config.json file to drive the crud generation.  The angular-fulls
         {
             "name": "reservation",
             "model": {
-                "headcount": "Number",
+                "headcount": "Number;hidden", 
                 "reservation_datetime": "Date",
                 "guest_id": "ManualReference"
             }
@@ -61,6 +65,21 @@ Next, create a config.json file to drive the crud generation.  The angular-fulls
             }
         },
         {
+            "name": "member",
+            "model": {
+                "first_name": "String",
+                "middle_name": "String",
+                "last_name": "String
+            }
+        },
+        {
+            "name": "loan",
+            "model": {
+                "name": "String",
+                "member": "MongooseReferenceCmbName:Member"
+            }
+        },
+        {
             "name": "guest",
             "model": {
                 "favorite_meal": "String"
@@ -74,7 +93,7 @@ Next, create a config.json file to drive the crud generation.  The angular-fulls
 Copy that into the root of your new angular-fullstack site, and run the following:
 
 ```bash
-$ yo angular-fullstack-crud
+$ yo angular-fullstack-crud-local
 ```
 
 Using the values found in the config file, the generator will add views, controllers, models, etc to add the configured CRUD objects to your application.  There are certain blocks of code that need to be injected into existing files (for example, the routes file).  There are two ways the angular-fullstack-crud generator can accomplish this:

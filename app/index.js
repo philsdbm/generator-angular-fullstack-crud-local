@@ -66,7 +66,7 @@ var AngularFullstackCrudGenerator = yeoman.generators.Base.extend({
     init: function () {
 
 //    this.on('end', function () {
-//      if (!this.options['skip-install']) {
+//      if (!this.options['skip-ins	tall']) {
 //        this.installDependencies();
 //      }
 //    });

@@ -18,7 +18,9 @@ angular.module('<%=appName%>')
     }
 
       <% _.forIn(modelToGenerate, function(value, key) {
-        if(value === 'ManualReference' || value.split(':')[0] === 'MongooseReference') {
+    	value = value.split(";")[0];
+        if(value === 'ManualReference' || value.split(':')[0] === 'MongooseReference' 
+        	|| value.split(':')[0] === 'MongooseReferenceCmbName') {
             var pruned = key.replace('_id', '');
             var formal = pruned.charAt(0).toUpperCase() + pruned.slice(1);
         %>
@@ -31,7 +33,15 @@ angular.module('<%=appName%>')
             });
             return results[0];
         }
-        <%
+	        <%
+	        if(value.split(':')[0] === 'MongooseReferenceCmbName') { 
+	    		var formal = key.charAt(0).toUpperCase() + key.slice(1); %>
+	    		
+	    	$scope.get<%=formal%>Name = function(<%=pruned%>) {
+	            return <%=pruned%>.last_name + ", " + <%=pruned%>.first_name + " " + <%=pruned%>.middle_name;
+	        }
+	    	
+	    	<%}
         }
       });
       %>

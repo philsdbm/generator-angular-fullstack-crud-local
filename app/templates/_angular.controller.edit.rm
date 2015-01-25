@@ -8,8 +8,9 @@ angular.module('<%=appName%>')
           $scope.<%=entityName%> = <%=entityName%>;
 
           <% _.forIn(modelToGenerate, function(value, key) {
+        	value = value.split(";")[0];
             if(value === 'Date') {
-            %>      $scope.<%=entityName%>.<%=key%> = <%=entityName%>.<%=key%>.shortDateFormat();
+            %>      $scope.<%=entityName%>.<%=key%> = new Date(<%=entityName%>.<%=key%>);
             <%
             }
           });
@@ -32,15 +33,34 @@ angular.module('<%=appName%>')
     };
 
       <% _.forIn(modelToGenerate, function(value, key) {
-        if(value === 'ManualReference' || value.split(':')[0] === 'MongooseReference') {
+    	value = value.split(";")[0];
+        if(value === 'ManualReference' || value.split(':')[0] === 'MongooseReference' 
+        	|| value.split(':')[0] === 'MongooseReferenceCmbName') {
             var pruned = key.replace('_id', '');
-        %>
-
+            var dependents = value.split(':')[2];
+            var formal = key.charAt(0).toUpperCase() + key.slice(1); %>
     $http.get('/api/<%=pruned%>s').success(function(<%=pruned%>s) {
       $scope.<%=pruned%>List = <%=pruned%>s;
     });
-
+    <% if(dependents) {%>
+    $scope.get<%=formal%>ById = function(id) {
+        var results = jQuery.grep($scope.<%=pruned%>List, function( <%=pruned%>, i ) {
+            return ( <%=pruned%>._id === id );
+        });
+        return results[0];
+    }
+    $scope.<%=pruned%>Updated = (function() {
         <%
+        _.forEach(dependents.split('-'), function(dependent){%>
+    	$scope.<%=entityName%>.<%=dependent%> = $scope.get<%=formal%>ById($scope.<%=entityName%>.<%=key%>).<%=dependent%>;
+    	<%});%>
+    });
+	<%}
+	if(value.split(':')[0] === 'MongooseReferenceCmbName') {%> 
+	$scope.get<%=formal%>Name = function(<%=pruned%>) {
+        return <%=pruned%>.last_name + ", " + <%=pruned%>.first_name + " " + <%=pruned%>.middle_name;
+    }
+	<%}
         }
       });
       %>

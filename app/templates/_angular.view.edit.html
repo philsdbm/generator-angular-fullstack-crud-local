@@ -14,6 +14,7 @@ _.forIn(model, function(value, key) { totalCounter++; });
             <form role="form" name="form" ng-submit="saveItem()" novalidate=""
                   class="ng-pristine ng-invalid ng-invalid-required">
                 <% _.forIn(modelToGenerate, function(value, key) {
+                	value = value.split(";")[0];
                     var formal = key.charAt(0).toUpperCase() + key.slice(1);
 
                 %>
@@ -28,14 +29,25 @@ _.forIn(model, function(value, key) { totalCounter++; });
                                ng-model="<%=entityName%>.<%=key%>"
                                class="form-control"
                                placeholder="Enter <%=formal%>"/>
-                        <% }
-                        else if(value === 'ManualReference' || value.split(':')[0] === 'MongooseReference') {
+                        <% 
+                        }
+                        else if(value === 'ManualReference' || value.split(':')[0] === 'MongooseReference'
+                        		|| value.split(':')[0] === 'MongooseReferenceCmbName') {
                             var pruned = key.replace('_id', '');
+                            var as_name = "item.name";
+                            var fieldUpdated = "";
+                            var dependents = value.split(':')[2];
+                            if(value.split(':')[0] === 'MongooseReferenceCmbName') {
+                            	as_name = "get" + formal + "Name(item)";
+                            }
+                            if(dependents) {
+                           		fieldUpdated += ' ng-change="' + key + 'Updated()"';
+                            }
                         %>
                         <select name="<%=key%>Input"
-                                ng-model="<%=entityName%>.<%=key%>"
+                                ng-model="<%=entityName%>.<%=key%>"<%=fieldUpdated%>
                                 class="form-control"
-                                ng-options="item._id as item.name for item in <%=pruned%>List"></select>
+                                ng-options="item._id as <%=as_name%> for item in <%=pruned%>List"></select>
                         <%
                         }
                         else
